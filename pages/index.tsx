@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import { ethers } from "ethers";
+import "../styles/globals.css";
 
 declare global {
   interface Window {
@@ -93,6 +94,7 @@ export default function Home() {
       </Head>
       <main className="container">
         <h1 className="title">Etherlink NFT DApp</h1>
+        <p className="subtitle">DevRel Technical Challenge for Trilitech by Amy Waliszewska</p>
         {!wallet ? (
           <button onClick={connectWallet} className="button primary">
             Connect Wallet
