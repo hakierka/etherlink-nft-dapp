@@ -23,9 +23,9 @@ Built with **Next.js**, **Ethers.js**, and custom **CSS**, deployed on **Vercel*
 
 - [Next.js
 ](https://nextjs.org/)
-- ipfs[Ethers.js
+- [Ethers.js
 ](https://docs.ethers.org/v5/)
-- s[IPFS](https://ipfs.tech/) + [Storacha](https://storacha.network/)ver (metadata hosting)
+- [IPFS](https://ipfs.tech/) + [Storacha](https://storacha.network/) (metadata hosting)
 -[Vercel](https://vercel.com/) (deployment)
 
 ## 📦 Getting Started
@@ -40,8 +40,7 @@ npm run dev
 
 Deployed separately via Hardhat. Update your `CONTRACT_ADDRESS` in `pages/index.tsx`.
 
-**ABI Assumes the contract exposes:
-**
+**ABI Assumes the contract exposes:**
 ```bash
 function mint(address to, string memory tokenURI) public;
 function transferNFT(address to, uint256 tokenId) public;
