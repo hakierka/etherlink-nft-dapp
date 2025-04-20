@@ -11,7 +11,7 @@ declare global {
   }
 }
 
-const CONTRACT_ADDRESS = "0x1A2A59aa997b42d4711A783B4a3E2e541B31A102"; // Etherlink deployed NFT contract
+const CONTRACT_ADDRESS = "0x349145BF727455Fd4fc8E547067960de07AB920e"; // Etherlink deployed NFT contract
 const CONTRACT_ABI = [
   "function mint(address to, string memory tokenURI) public",
   "function transferNFT(address to, uint256 tokenId) public",
