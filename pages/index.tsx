@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import { ethers } from "ethers";
@@ -5,11 +7,11 @@ import Image from "next/image";
 
 declare global {
   interface Window {
-    ethereum?: ethers.Eip1193Provider;
+    ethereum?: any;
   }
 }
 
-const CONTRACT_ADDRESS = "<REPLACE_WITH_YOUR_CONTRACT_ADDRESS>";
+const CONTRACT_ADDRESS = "0x349145BF727455Fd4fc8E547067960de07AB920e"; // or whatever your contract address is
 const CONTRACT_ABI = [
   "function mint(address to, string memory tokenURI) public",
   "function transferNFT(address to, uint256 tokenId) public",
@@ -20,14 +22,14 @@ const CONTRACT_ABI = [
 
 export default function Home() {
   const [wallet, setWallet] = useState<string | null>(null);
-  const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null);
+  const [provider, setProvider] = useState<ethers.JsonRpcProvider | null>(null);
   const [contract, setContract] = useState<ethers.Contract | null>(null);
   const [tokens, setTokens] = useState<{ id: number; uri: string }[]>([]);
 
   useEffect(() => {
     if (typeof window.ethereum !== "undefined") {
-      const _provider = new ethers.BrowserProvider(window.ethereum as ethers.Eip1193Provider);
-      setProvider(_provider);
+      const _provider = new ethers.BrowserProvider(window.ethereum);
+      _provider.getNetwork().then(() => setProvider(_provider));
     }
   }, []);
 
@@ -35,21 +37,21 @@ export default function Home() {
     if (!provider) return;
     const accounts = await provider.send("eth_requestAccounts", []);
     const signer = await provider.getSigner(accounts[0]);
-    const address = accounts[0];
+    const address = await signer.getAddress();
     const _contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
     setWallet(address);
     setContract(_contract);
   };
 
   const handleMint = async () => {
-    if (!wallet || !provider || !contract) return;
+    if (!wallet || !contract) return;
     try {
       const tokenURI = window.prompt("Paste full metadata URI (e.g. https://...)", "https://") || "";
       const tx = await contract.mint(wallet, tokenURI);
       await tx.wait();
       alert("✅ NFT Minted! TX Hash: " + tx.hash);
-    } catch (error: unknown) {
-      console.error("Mint failed:", (error as Error)?.message || error);
+    } catch (error: any) {
+      console.error("Mint failed:", error);
       alert("❌ Mint failed. See console for details.");
     }
   };
@@ -117,13 +119,13 @@ export default function Home() {
               {tokens.map((t) => (
                 <div key={t.id} className="nft-card">
                   <p className="token-label">Token #{t.id}</p>
-                  <Image 
-                    src={t.uri} 
-                    alt={`Token ${t.id}`} 
-                    className="token-image" 
-                    width={200} 
+                  <Image
+                    src={t.uri}
+                    alt={`Token ${t.id}`}
+                    className="token-image"
+                    width={200}
                     height={200}
-                    unoptimized={true} // For external URLs that might not support optimization
+                    unoptimized={true}
                   />
                 </div>
               ))}
