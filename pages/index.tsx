@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 
@@ -110,7 +108,7 @@ export default function Home() {
               <div key={t.id} className="border rounded-xl p-4 shadow">
                 <p className="text-sm font-semibold mb-2">Token #{t.id}</p>
                 <img /* eslint-disable-next-line @next/next/no-img-element */
-                src={t.uri}
+                  src={t.uri}
                   alt={`Token ${t.id}`}
                   className="w-full h-48 object-contain rounded"
                 />
