@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import { ethers } from "ethers";
-import "../styles/globals.css";
+import Image from "next/image";
 
 declare global {
   interface Window {
@@ -117,7 +117,14 @@ export default function Home() {
               {tokens.map((t) => (
                 <div key={t.id} className="nft-card">
                   <p className="token-label">Token #{t.id}</p>
-                  <img src={t.uri} alt={`Token ${t.id}`} className="token-image" />
+                  <Image 
+                    src={t.uri} 
+                    alt={`Token ${t.id}`} 
+                    className="token-image" 
+                    width={200} 
+                    height={200}
+                    unoptimized={true} // For external URLs that might not support optimization
+                  />
                 </div>
               ))}
             </div>
