@@ -49,9 +49,10 @@ export default function Home() {
       const tx = await contract.mint(wallet, tokenURI);
       await tx.wait();
       alert("✅ NFT Minted! TX Hash: " + tx.hash);
-    } catch (error) {
-      console.error("Mint failed:", (error as Error).message || error);
-      alert("❌ Mint failed: " + ((error as Error).message || "Unknown error"));
+    } catch (error: unknown) {
+      const message = (error as { message?: string })?.message || "Unknown error";
+      console.error("Mint failed:", message);
+      alert("❌ Mint failed: " + message);
     }
   };
 
@@ -135,4 +136,3 @@ export default function Home() {
     </>
   );
 }
-"
