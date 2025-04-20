@@ -11,7 +11,7 @@ declare global {
   }
 }
 
-const CONTRACT_ADDRESS = "0x349145BF727455Fd4fc8E547067960de07AB920e"; // or whatever your contract address is
+const CONTRACT_ADDRESS = "0x1A2A59aa997b42d4711A783B4a3E2e541B31A102"; // Etherlink deployed NFT contract
 const CONTRACT_ABI = [
   "function mint(address to, string memory tokenURI) public",
   "function transferNFT(address to, uint256 tokenId) public",
@@ -22,24 +22,23 @@ const CONTRACT_ABI = [
 
 export default function Home() {
   const [wallet, setWallet] = useState<string | null>(null);
-  const [provider, setProvider] = useState<ethers.JsonRpcProvider | null>(null);
+  const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null);
   const [contract, setContract] = useState<ethers.Contract | null>(null);
   const [tokens, setTokens] = useState<{ id: number; uri: string }[]>([]);
 
   useEffect(() => {
     if (typeof window.ethereum !== "undefined") {
       const _provider = new ethers.BrowserProvider(window.ethereum);
-      _provider.getNetwork().then(() => setProvider(_provider));
+      setProvider(_provider);
     }
   }, []);
 
   const connectWallet = async () => {
     if (!provider) return;
     const accounts = await provider.send("eth_requestAccounts", []);
-    const signer = await provider.getSigner(accounts[0]);
-    const address = await signer.getAddress();
+    const signer = await provider.getSigner();
     const _contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-    setWallet(address);
+    setWallet(accounts[0]);
     setContract(_contract);
   };
 
@@ -52,7 +51,7 @@ export default function Home() {
       alert("✅ NFT Minted! TX Hash: " + tx.hash);
     } catch (error: any) {
       console.error("Mint failed:", error);
-      alert("❌ Mint failed. See console for details.");
+      alert("❌ Mint failed: " + (error?.message || "Unknown error"));
     }
   };
 
