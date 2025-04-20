@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import { ethers } from "ethers";
-import "../styles/globals.css";
 
 declare global {
   interface Window {
