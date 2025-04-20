@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import { ethers } from "ethers";
+import "../styles/globals.css";
 
 declare global {
   interface Window {
@@ -91,61 +92,31 @@ export default function Home() {
         <meta name="description" content="Mint and manage NFTs on Etherlink Testnet" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main style={{
-        padding: "2rem",
-        maxWidth: "600px",
-        margin: "0 auto",
-        textAlign: "center",
-        background: "#000",
-        color: "#fff",
-        fontFamily: "Arial, sans-serif"
-      }}>
-        <h1 style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: "1rem" }}>Etherlink NFT DApp</h1>
+      <main className="container">
+        <h1 className="title">Etherlink NFT DApp</h1>
         {!wallet ? (
-          <button onClick={connectWallet} style={{
-            background: "#0070f3",
-            color: "#fff",
-            padding: "0.75rem 1.5rem",
-            borderRadius: "8px",
-            border: "none",
-            cursor: "pointer",
-            fontSize: "1rem"
-          }}>
+          <button onClick={connectWallet} className="button primary">
             Connect Wallet
           </button>
         ) : (
           <>
-            <p style={{ fontSize: "0.875rem", color: "#aaa", marginBottom: "1rem" }}>Connected as: {wallet}</p>
-            <div style={{ display: "flex", justifyContent: "center", gap: "1rem", flexWrap: "wrap" }}>
-              <button onClick={handleMint} style={{ background: "#22c55e", color: "#fff", padding: "0.75rem 1rem", borderRadius: "6px", border: "none", cursor: "pointer" }}>
+            <p className="wallet">Connected as: {wallet}</p>
+            <div className="button-group">
+              <button onClick={handleMint} className="button green">
                 Mint NFT
               </button>
-              <button onClick={handleTransfer} style={{ background: "#facc15", color: "#000", padding: "0.75rem 1rem", borderRadius: "6px", border: "none", cursor: "pointer" }}>
+              <button onClick={handleTransfer} className="button yellow">
                 Transfer NFT
               </button>
-              <button onClick={fetchMyNFTs} style={{ background: "#a855f7", color: "#fff", padding: "0.75rem 1rem", borderRadius: "6px", border: "none", cursor: "pointer" }}>
+              <button onClick={fetchMyNFTs} className="button purple">
                 View My NFTs
               </button>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem", marginTop: "2rem" }}>
+            <div className="nft-grid">
               {tokens.map((t) => (
-                <div key={t.id} style={{
-                  border: "1px solid #333",
-                  borderRadius: "12px",
-                  padding: "1rem",
-                  background: "#111"
-                }}>
-                  <p style={{ fontSize: "0.875rem", fontWeight: "bold", marginBottom: "0.5rem" }}>Token #{t.id}</p>
-                  <img
-                    src={t.uri}
-                    alt={`Token ${t.id}`}
-                    style={{
-                      width: "100%",
-                      height: "200px",
-                      objectFit: "contain",
-                      borderRadius: "8px"
-                    }}
-                  />
+                <div key={t.id} className="nft-card">
+                  <p className="token-label">Token #{t.id}</p>
+                  <img src={t.uri} alt={`Token ${t.id}`} className="token-image" />
                 </div>
               ))}
             </div>
