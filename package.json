@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@shadcn/ui": "^0.0.4",
     "ethers": "^6.13.5",
     "next": "^15",
     "react": "^18",
@@ -17,11 +16,9 @@
     "web3.storage": "^4.5.5"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "autoprefixer": "^10.4.21",
     "eslint": "^9",
     "eslint-config-next": "15.3.1",
     "typescript": "^5"
