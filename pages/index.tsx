@@ -83,34 +83,60 @@ export default function Home() {
   };
 
   return (
-    <main className="p-6 max-w-xl mx-auto text-center space-y-6">
-      <h1 className="text-3xl font-bold">Etherlink NFT DApp</h1>
+    <main style={{
+      padding: "2rem",
+      maxWidth: "600px",
+      margin: "0 auto",
+      textAlign: "center",
+      background: "#000",
+      color: "#fff",
+      fontFamily: "Arial, sans-serif"
+    }}>
+      <h1 style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: "1rem" }}>Etherlink NFT DApp</h1>
       {!wallet ? (
-        <button onClick={connectWallet} className="bg-blue-600 text-white px-4 py-2 rounded">
+        <button onClick={connectWallet} style={{
+          background: "#0070f3",
+          color: "#fff",
+          padding: "0.75rem 1.5rem",
+          borderRadius: "8px",
+          border: "none",
+          cursor: "pointer",
+          fontSize: "1rem"
+        }}>
           Connect Wallet
         </button>
       ) : (
         <>
-          <p className="text-sm text-gray-600">Connected as: {wallet}</p>
-          <div className="space-x-4">
-            <button onClick={handleMint} className="bg-green-600 text-white px-4 py-2 rounded">
+          <p style={{ fontSize: "0.875rem", color: "#aaa", marginBottom: "1rem" }}>Connected as: {wallet}</p>
+          <div style={{ display: "flex", justifyContent: "center", gap: "1rem", flexWrap: "wrap" }}>
+            <button onClick={handleMint} style={{ background: "#22c55e", color: "#fff", padding: "0.75rem 1rem", borderRadius: "6px", border: "none", cursor: "pointer" }}>
               Mint NFT
             </button>
-            <button onClick={handleTransfer} className="bg-yellow-500 text-black px-4 py-2 rounded">
+            <button onClick={handleTransfer} style={{ background: "#facc15", color: "#000", padding: "0.75rem 1rem", borderRadius: "6px", border: "none", cursor: "pointer" }}>
               Transfer NFT
             </button>
-            <button onClick={fetchMyNFTs} className="bg-purple-600 text-white px-4 py-2 rounded">
+            <button onClick={fetchMyNFTs} style={{ background: "#a855f7", color: "#fff", padding: "0.75rem 1rem", borderRadius: "6px", border: "none", cursor: "pointer" }}>
               View My NFTs
             </button>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem", marginTop: "2rem" }}>
             {tokens.map((t) => (
-              <div key={t.id} className="border rounded-xl p-4 shadow">
-                <p className="text-sm font-semibold mb-2">Token #{t.id}</p>
-                <img /* eslint-disable-next-line @next/next/no-img-element */
+              <div key={t.id} style={{
+                border: "1px solid #333",
+                borderRadius: "12px",
+                padding: "1rem",
+                background: "#111"
+              }}>
+                <p style={{ fontSize: "0.875rem", fontWeight: "bold", marginBottom: "0.5rem" }}>Token #{t.id}</p>
+                <img
                   src={t.uri}
                   alt={`Token ${t.id}`}
-                  className="w-full h-48 object-contain rounded"
+                  style={{
+                    width: "100%",
+                    height: "200px",
+                    objectFit: "contain",
+                    borderRadius: "8px"
+                  }}
                 />
               </div>
             ))}
