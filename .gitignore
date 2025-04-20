@@ -1,0 +1,30 @@
+# Node
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment
+.env
+.env.*
+
+# Hardhat
+artifacts
+cache
+coverage
+coverage.json
+
+# TypeChain
+typechain
+typechain-types
+
+# Next.js
+.next
+out
+
+# Hardhat Ignition default folder
+ignition/deployments/chain-31337
+
+# OS-specific
+.DS_Store
+Thumbs.db
