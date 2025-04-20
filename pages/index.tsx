@@ -7,11 +7,11 @@ import Image from "next/image";
 
 declare global {
   interface Window {
-    ethereum?: any;
+    ethereum?: ethers.Eip1193Provider;
   }
 }
 
-const CONTRACT_ADDRESS = "0x349145BF727455Fd4fc8E547067960de07AB920e"; // Etherlink deployed NFT contract
+const CONTRACT_ADDRESS = "0x349145BF727455Fd4fc8E547067960de07AB920e";
 const CONTRACT_ABI = [
   "function mint(address to, string memory tokenURI) public",
   "function transferNFT(address to, uint256 tokenId) public",
@@ -35,7 +35,7 @@ export default function Home() {
 
   const connectWallet = async () => {
     if (!provider) return;
-    const accounts = await provider.send("eth_requestAccounts", []);
+    const accounts: string[] = await provider.send("eth_requestAccounts", []);
     const signer = await provider.getSigner();
     const _contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
     setWallet(accounts[0]);
@@ -49,9 +49,9 @@ export default function Home() {
       const tx = await contract.mint(wallet, tokenURI);
       await tx.wait();
       alert("✅ NFT Minted! TX Hash: " + tx.hash);
-    } catch (error: any) {
-      console.error("Mint failed:", error);
-      alert("❌ Mint failed: " + (error?.message || "Unknown error"));
+    } catch (error) {
+      console.error("Mint failed:", (error as Error).message || error);
+      alert("❌ Mint failed: " + ((error as Error).message || "Unknown error"));
     }
   };
 
@@ -135,3 +135,4 @@ export default function Home() {
     </>
   );
 }
+"
