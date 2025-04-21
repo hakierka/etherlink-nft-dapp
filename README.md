@@ -13,45 +13,49 @@ This is a simple NFT minting and management app for the [Etherlink Testnet](http
 ](https://etherlink-nft-dapp.vercel.app)
 
 ---
+## 💻 Local Development
+```
+git clone https://github.com/hakierka/etherlink-nft-dapp.git
+cd etherlink-nft-dapp
+npm install
+npm run dev
+```
+Visit [http://localhost:3000](http://localhost:3000)
 
-## 🧪 How to Use
+## ✅ Usage Guide
+### Connect Wallet
+1. Click Connect Wallet
+2. Use Etherlink Testnet on MetaMask
+```
+Network Name: Etherlink Testnet
+RPC URL: https://node.ghostnet.etherlink.com
+Chain ID: 128123
+Symbol: ETH
+```
 
-### 🔗 Connect Your Wallet
-1. Open the [deployed app on Vercel](https://etherlink-nft-dapp.vercel.app)
-2. Click **Connect Wallet**
-3. Make sure MetaMask is on the **Etherlink Testnet**
+### Mint NFT
+1. Click Mint NFT
+2. Paste full JSON URI (e.g. Storacha link)
+   
+Sample Metadata File:
+```
+{
+  "name": "Cat in a Box",
+  "description": "Charming cat NFT",
+  "image": "https://bafybeifp2qrmlbkmhtmfsp5bop5hcsuhmiqmuk3vhfpmyjbydszcy7i6jm.ipfs.w3s.link/Papi_in_a_box.jpeg"
+}
+```
+Paste This When Minting:
+```
+https://bafybeibfcc3hutn7ziju6jftvsr3o7vyz6bm5do3a4o4kfzl7x3eicp3ry.ipfs.w3s.link/papi-in-a-box.json
+```
 
-### 🧾 Mint NFT
-1. Click **Mint NFT**
-2. Paste a valid metadata JSON URI from IPFS:
-   Example: [https://bafybeibfcc3hutn7ziju6jftvsr3o7vyz6bm5do3a4o4kfzl7x3eicp3ry.ipfs.w3s.link/papi-in-a-box.json](https://bafybeibfcc3hutn7ziju6jftvsr3o7vyz6bm5do3a4o4kfzl7x3eicp3ry.ipfs.w3s.link/papi-in-a-box.json)
-3. Confirm the transaction in MetaMask
-3. Confirm the transaction in MetaMask
+### Transfer NFT
+- Enter recipient address
+- Provide token ID (from “View My NFTs”)
 
-### 🔁 Transfer NFT
-1. Click **Transfer NFT**
-2. Enter the **recipient address**
-3. Enter the **token ID** to transfer
-
-### 👁️ View NFTs
+### View NFTs
 - Click **View My NFTs** to fetch and display tokens you own on the connected address
-
----
-
-## ⚙️ Etherlink Network Setup (for MetaMask)
-
-Manually add the Etherlink Testnet to MetaMask:
-
-**Network Name:** Etherlink Testnet RPC 
-
-**URL:** [https://node.ghostnet.etherlink.com ](https://node.ghostnet.etherlink.com )
-
-**Chain ID:** 128123 
-
-**Currency Symbol:** ETH 
-
-**Block Explorer:** [https://testnet.explorer.etherlink.com/](https://testnet.explorer.etherlink.com/)
-
 
 ---
 
@@ -64,10 +68,43 @@ Manually add the Etherlink Testnet to MetaMask:
 **A:** Make sure your metadata JSON uses the correct `image` field and is publicly accessible on IPFS.
 
 ### Q: I'm getting a `bad address checksum` error?
-**A:** Use lowercase addresses when hardcoding addresses in the code.
+**A:** You're likely pasting an address in the wrong case. Always use checksummed or lowercase addresses like:
+```
+0xfcaf2e74a561578d3709da7d157079dd91b20ff8
+```
 
 ### Q: View My NFTs shows nothing?
 **A:** Your wallet must match the address that owns the token. Also verify your contract exposes `tokenCounter`, `tokenURI`, and `ownerOf` functions.
+
+
+### Q: I clicked "Mint", but got execution reverted or unknown custom error
+**A:** This means the wallet you're using is not the owner of the contract.
+Only the deployer (owner) of the contract can mint NFTs.
+
+### Q: I uploaded an image to Web3.Storage — why can’t I mint it directly?
+**A:** You need to mint a metadata JSON, not a raw image.
+Wrap your image URL in a .json like:
+```
+{
+  "name": "Cool NFT",
+  "description": "Minted via Etherlink DApp",
+  "image": "https://bafy...ipfs.w3s.link/image.jpg"
+}
+```
+Then paste the full URL to the .json during minting.
+
+### Q: My metadata shows a broken image in UI
+
+**A:** Ensure your JSON `"image"` field points to a direct URL of a valid image.
+Test it by opening the image link directly in a browser.
+
+### Q: How do I find my token ID?
+**A:** It’s shown on the UI after you click “View My NFTs”.
+Look for `Token #X`.
+
+### Q:  I don’t want to use Remix. Can I deploy the contract via Hardhat?
+**A:** Yes — there’s a sample `contract-template/EtherlinkNFT.sol` in the repo.
+You can deploy it using your private key via Hardhat.
 
 ---
 
