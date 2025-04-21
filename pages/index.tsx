@@ -11,7 +11,7 @@ declare global {
   }
 }
 
-const CONTRACT_ADDRESS = "0xa95a773c85eeb999e4ea2839434a7c7e232fd21c";
+const CONTRACT_ADDRESS = "0xA95a773C85eEb999E4Ea2839434a7C7e232fD21c";
 const CONTRACT_ABI = [
   "function mint(address to, string memory tokenURI) public",
   "function transferNFT(address to, uint256 tokenId) public",
@@ -42,6 +42,15 @@ export default function Home() {
     setContract(_contract);
   };
 
+  const switchAccount = async () => {
+    try {
+      await window.ethereum?.request({ method: "wallet_requestPermissions", params: [{ eth_accounts: {} }] });
+      await connectWallet();
+    } catch (err) {
+      console.error("Account switch failed:", err);
+    }
+  };
+
   const handleMint = async () => {
     if (!wallet || !contract) return;
     try {
@@ -49,6 +58,7 @@ export default function Home() {
       const tx = await contract.mint(wallet, tokenURI);
       await tx.wait();
       alert("✅ NFT Minted! TX Hash: " + tx.hash);
+      fetchMyNFTs();
     } catch (error: unknown) {
       const message = (error as { message?: string })?.message || "Unknown error";
       console.error("Mint failed:", message);
@@ -64,6 +74,7 @@ export default function Home() {
     const tx = await contract.transferNFT(to, tokenId);
     await tx.wait();
     alert("NFT Transferred!");
+    fetchMyNFTs();
   };
 
   const fetchMyNFTs = async () => {
@@ -104,6 +115,7 @@ export default function Home() {
         ) : (
           <>
             <p className="wallet">Connected as: {wallet}</p>
+            <button onClick={switchAccount} className="button">Switch Account</button>
             <div className="button-group">
               <button onClick={handleMint} className="button green">
                 Mint NFT
