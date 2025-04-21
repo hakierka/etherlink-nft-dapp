@@ -24,7 +24,7 @@ export default function Home() {
   const [wallet, setWallet] = useState<string | null>(null);
   const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null);
   const [contract, setContract] = useState<ethers.Contract | null>(null);
-  const [tokens, setTokens] = useState<{ id: number; uri: string }[]>([]);
+  const [tokens, setTokens] = useState<{ id: number; image: string }[]>([]);
 
   useEffect(() => {
     if (typeof window.ethereum !== "undefined") {
@@ -80,14 +80,16 @@ export default function Home() {
   const fetchMyNFTs = async () => {
     if (!contract || !wallet) return;
     const total = await contract.tokenCounter();
-    const owned: { id: number; uri: string }[] = [];
+    const owned: { id: number; image: string }[] = [];
 
     for (let i = 0; i < total; i++) {
       try {
         const owner = await contract.ownerOf(i);
         if (owner.toLowerCase() === wallet.toLowerCase()) {
           const uri = await contract.tokenURI(i);
-          owned.push({ id: i, uri });
+          const response = await fetch(uri);
+          const metadata = await response.json();
+          owned.push({ id: i, image: metadata.image });
         }
       } catch {
         // skip
@@ -132,7 +134,7 @@ export default function Home() {
                 <div key={t.id} className="nft-card">
                   <p className="token-label">Token #{t.id}</p>
                   <Image
-                    src={t.uri}
+                    src={t.image}
                     alt={`Token ${t.id}`}
                     className="token-image"
                     width={200}
