@@ -112,14 +112,8 @@ export default function Home() {
               {tokens.map((t) => (
                 <div key={t.id} className="nft-card">
                   <p className="token-label">Token #{t.id}</p>
-                  <Image 
-                    src={t.uri}
-                    alt={`Token ${t.id}`}
-                    className="token-image"
-                    width={200}
-                    height={200}
-                    unoptimized
-                  />
+                  <ImageLoader uri={t.uri} tokenId={t.id} />
+
                 </div>
               ))}
             </div>
@@ -129,3 +123,31 @@ export default function Home() {
     </>
   );
 }
+function ImageLoader({ uri, tokenId }: { uri: string; tokenId: number }) {
+    const [imgSrc, setImgSrc] = useState<string | null>(null);
+  
+    useEffect(() => {
+      fetch(uri)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.image) setImgSrc(data.image);
+        })
+        .catch((err) => {
+          console.error(`Failed to fetch metadata for token #${tokenId}`, err);
+        });
+    }, [uri, tokenId]);
+  
+    if (!imgSrc) return <p>Loading image for Token #{tokenId}...</p>;
+  
+    return (
+      <Image
+        src={imgSrc}
+        alt={`Token ${tokenId}`}
+        className="token-image"
+        width={200}
+        height={200}
+        unoptimized={true}
+      />
+    );
+  }
+  
