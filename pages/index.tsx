@@ -11,14 +11,16 @@ declare global {
   }
 }
 
-const CONTRACT_ADDRESS = "0xa95a773c85eeb999e4ea2839434a7c7e232fd21c";
+const CONTRACT_ADDRESS = "0xfcaf2e74a561578d3709da7d157079dd91b20ff8";
 const CONTRACT_ABI = [
-  "function mint(address to, string memory tokenURI) public",
-  "function transferNFT(address to, uint256 tokenId) public",
-  "function tokenCounter() public view returns (uint256)",
-  "function ownerOf(uint256 tokenId) public view returns (address)",
-  "function tokenURI(uint256 tokenId) public view returns (string)"
-];
+    "function mint(address to, string memory tokenURI) public",
+    "function transferNFT(address to, uint256 tokenId) public",
+    "function tokenCounter() public view returns (uint256)",
+    "function ownerOf(uint256 tokenId) public view returns (address)",
+    "function tokenURI(uint256 tokenId) public view returns (string)",
+    "event Minted(address indexed to, uint256 indexed tokenId, string tokenURI)"
+  ];
+  
 
 export default function Home() {
   const [wallet, setWallet] = useState<string | null>(null);
