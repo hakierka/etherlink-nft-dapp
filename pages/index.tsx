@@ -54,7 +54,7 @@ export default function Home() {
   const handleMint = async () => {
     if (!wallet || !contract) return;
     try {
-      const tokenURI = window.prompt("Paste full image URI (e.g. https://...)", "https://") || "";
+      const tokenURI = window.prompt("Paste metadata JSON URI (e.g. https://.../file.json)", "https://") || "";
       const tx = await contract.mint(wallet, tokenURI);
       await tx.wait();
       alert("✅ NFT Minted! TX Hash: " + tx.hash);
