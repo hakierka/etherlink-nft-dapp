@@ -5,8 +5,11 @@ async function main() {
   console.log("Deploying with:", deployer.address);
 
   const NFT = await hre.ethers.getContractFactory("EtherlinkNFT", deployer);
-
   const nft = await NFT.deploy({ gasLimit: 3_000_000 });
+
+  console.log("Transaction sent! Waiting for deployment confirmation...");
+  console.log("Deployment TX hash:", nft.deploymentTransaction().hash);
+
   await nft.waitForDeployment();
 
   const contractAddress = await nft.getAddress();
