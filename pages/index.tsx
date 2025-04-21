@@ -11,7 +11,7 @@ declare global {
   }
 }
 
-const CONTRACT_ADDRESS = "0xa95a773c85eeb999e4ea2839434a7c7e232fd21c";
+const CONTRACT_ADDRESS = "0xA95a773C85eEb999E4Ea2839434a7C7e232fD21c";
 const CONTRACT_ABI = [
   "function mint(address to, string memory tokenURI) public",
   "function transferNFT(address to, uint256 tokenId) public",
@@ -87,7 +87,15 @@ export default function Home() {
         const owner = await contract.ownerOf(i);
         if (owner.toLowerCase() === wallet.toLowerCase()) {
           const uri = await contract.tokenURI(i);
-          owned.push({ id: i, image: uri });
+          let image = uri;
+          try {
+            const res = await fetch(uri);
+            const json = await res.json();
+            if (json.image) image = json.image;
+          } catch {
+            // not JSON, fallback to uri as image
+          }
+          owned.push({ id: i, image });
         }
       } catch {
         // skip
@@ -128,19 +136,23 @@ export default function Home() {
               </button>
             </div>
             <div className="nft-grid">
-              {tokens.map((t) => (
-                <div key={t.id} className="nft-card">
-                  <p className="token-label">Token #{t.id}</p>
-                  <Image
-                    src={t.image}
-                    alt={`Token ${t.id}`}
-                    className="token-image"
-                    width={200}
-                    height={200}
-                    unoptimized={true}
-                  />
-                </div>
-              ))}
+              {tokens.length === 0 ? (
+                <p>No NFTs found.</p>
+              ) : (
+                tokens.map((t) => (
+                  <div key={t.id} className="nft-card">
+                    <p className="token-label">Token #{t.id}</p>
+                    <Image
+                      src={t.image}
+                      alt={`Token ${t.id}`}
+                      className="token-image"
+                      width={200}
+                      height={200}
+                      unoptimized={true}
+                    />
+                  </div>
+                ))
+              )}
             </div>
           </>
         )}
