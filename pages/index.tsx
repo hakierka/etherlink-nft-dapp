@@ -82,30 +82,25 @@ export default function Home() {
   const fetchMyNFTs = async () => {
     if (!contract || !wallet) return;
     const total = await contract.tokenCounter();
-    const owned: { id: number; image: string }[] = [];
-
+    const owned: { id: number; uri: string }[] = [];
+  
     for (let i = 0; i < total; i++) {
       try {
         const owner = await contract.ownerOf(i);
         if (owner.toLowerCase() === wallet.toLowerCase()) {
           const uri = await contract.tokenURI(i);
-          let image = uri;
-          try {
-            const res = await fetch(uri);
-            const json = await res.json();
-            if (json.image) image = json.image;
-          } catch {
-            // not JSON, fallback to uri as image
-          }
-          owned.push({ id: i, image });
+          const res = await fetch(uri);
+          const metadata = await res.json();
+          owned.push({ id: i, uri: metadata.image }); // now using actual image URL
         }
-      } catch {
-        // skip
+      } catch (err) {
+        // Skip NFTs that fail (e.g. token doesn't exist)
       }
     }
-
+  
     setTokens(owned);
   };
+  
 
   return (
     <>
