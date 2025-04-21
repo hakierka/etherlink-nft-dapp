@@ -11,8 +11,7 @@ declare global {
   }
 }
 
-// Switched to Account 2 (not funded) as contract address
-const CONTRACT_ADDRESS = "0xfCaf2E74a561578d3709DA7D157079DD91B20Ff8";
+const CONTRACT_ADDRESS = "0x349145BF727455Fd4fc8E547067960de07AB920e";
 const CONTRACT_ABI = [
   "function mint(address to, string memory tokenURI) public",
   "function transferNFT(address to, uint256 tokenId) public",
