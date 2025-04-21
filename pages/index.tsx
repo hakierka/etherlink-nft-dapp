@@ -1,5 +1,4 @@
-"use client";
-
+// pages/index.tsx
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import { ethers } from "ethers";
@@ -13,58 +12,46 @@ declare global {
 
 const CONTRACT_ADDRESS = "0xa95a773c85eeb999e4ea2839434a7c7e232fd21c";
 const CONTRACT_ABI = [
-    "function mint(address to, string memory tokenURI) public",
-    "function transferNFT(address to, uint256 tokenId) public",
-    "function tokenCounter() public view returns (uint256)",
-    "function ownerOf(uint256 tokenId) public view returns (address)",
-    "function tokenURI(uint256 tokenId) public view returns (string)",
-    "event Minted(address indexed to, uint256 indexed tokenId, string tokenURI)"
-  ];
-  
+  "function mint(address to, string memory tokenURI) public",
+  "function transferNFT(address to, uint256 tokenId) public",
+  "function tokenCounter() public view returns (uint256)",
+  "function ownerOf(uint256 tokenId) public view returns (address)",
+  "function tokenURI(uint256 tokenId) public view returns (string)"
+];
 
 export default function Home() {
   const [wallet, setWallet] = useState<string | null>(null);
   const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null);
   const [contract, setContract] = useState<ethers.Contract | null>(null);
-  const [tokens, setTokens] = useState<{ id: number; image: string }[]>([]);
+  const [tokens, setTokens] = useState<{ id: number; uri: string }[]>([]);
 
   useEffect(() => {
     if (typeof window.ethereum !== "undefined") {
-      const _provider = new ethers.BrowserProvider(window.ethereum);
+      const _provider = new ethers.BrowserProvider(window.ethereum as ethers.Eip1193Provider);
       setProvider(_provider);
     }
   }, []);
 
   const connectWallet = async () => {
     if (!provider) return;
-    const accounts: string[] = await provider.send("eth_requestAccounts", []);
-    const signer = await provider.getSigner();
+    const accounts = await provider.send("eth_requestAccounts", []);
+    const signer = await provider.getSigner(accounts[0]);
+    const address = accounts[0];
     const _contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-    setWallet(accounts[0]);
+    setWallet(address);
     setContract(_contract);
   };
 
-  const switchAccount = async () => {
-    try {
-      await window.ethereum?.request({ method: "wallet_requestPermissions", params: [{ eth_accounts: {} }] });
-      await connectWallet();
-    } catch (err) {
-      console.error("Account switch failed:", err);
-    }
-  };
-
   const handleMint = async () => {
-    if (!wallet || !contract) return;
+    if (!wallet || !provider || !contract) return;
     try {
-      const tokenURI = window.prompt("Paste metadata JSON URI (e.g. https://.../file.json)", "https://") || "";
+      const tokenURI = window.prompt("Paste full metadata URI (e.g. https://...)", "https://") || "";
       const tx = await contract.mint(wallet, tokenURI);
       await tx.wait();
       alert("✅ NFT Minted! TX Hash: " + tx.hash);
-      fetchMyNFTs();
-    } catch (error: unknown) {
-      const message = (error as { message?: string })?.message || "Unknown error";
-      console.error("Mint failed:", message);
-      alert("❌ Mint failed: " + message);
+    } catch (e) {
+      console.error("Mint failed:", e);
+      alert("❌ Mint failed. See console for details.");
     }
   };
 
@@ -76,31 +63,27 @@ export default function Home() {
     const tx = await contract.transferNFT(to, tokenId);
     await tx.wait();
     alert("NFT Transferred!");
-    fetchMyNFTs();
   };
 
   const fetchMyNFTs = async () => {
     if (!contract || !wallet) return;
     const total = await contract.tokenCounter();
     const owned: { id: number; uri: string }[] = [];
-  
+
     for (let i = 0; i < total; i++) {
       try {
         const owner = await contract.ownerOf(i);
         if (owner.toLowerCase() === wallet.toLowerCase()) {
           const uri = await contract.tokenURI(i);
-          const res = await fetch(uri);
-          const metadata = await res.json();
-          owned.push({ id: i, uri: metadata.image }); // now using actual image URL
+          owned.push({ id: i, uri });
         }
-      } catch (err) {
-        // Skip NFTs that fail (e.g. token doesn't exist)
+      } catch {
+        continue;
       }
     }
-  
+
     setTokens(owned);
   };
-  
 
   return (
     <>
@@ -120,36 +103,25 @@ export default function Home() {
         ) : (
           <>
             <p className="wallet">Connected as: {wallet}</p>
-            <button onClick={switchAccount} className="button">Switch Account</button>
             <div className="button-group">
-              <button onClick={handleMint} className="button green">
-                Mint NFT
-              </button>
-              <button onClick={handleTransfer} className="button yellow">
-                Transfer NFT
-              </button>
-              <button onClick={fetchMyNFTs} className="button purple">
-                View My NFTs
-              </button>
+              <button onClick={handleMint} className="button green">Mint NFT</button>
+              <button onClick={handleTransfer} className="button yellow">Transfer NFT</button>
+              <button onClick={fetchMyNFTs} className="button purple">View My NFTs</button>
             </div>
             <div className="nft-grid">
-              {tokens.length === 0 ? (
-                <p>No NFTs found.</p>
-              ) : (
-                tokens.map((t) => (
-                  <div key={t.id} className="nft-card">
-                    <p className="token-label">Token #{t.id}</p>
-                    <Image
-                      src={t.image}
-                      alt={`Token ${t.id}`}
-                      className="token-image"
-                      width={200}
-                      height={200}
-                      unoptimized={true}
-                    />
-                  </div>
-                ))
-              )}
+              {tokens.map((t) => (
+                <div key={t.id} className="nft-card">
+                  <p className="token-label">Token #{t.id}</p>
+                  <Image 
+                    src={t.uri}
+                    alt={`Token ${t.id}`}
+                    className="token-image"
+                    width={200}
+                    height={200}
+                    unoptimized
+                  />
+                </div>
+              ))}
             </div>
           </>
         )}
