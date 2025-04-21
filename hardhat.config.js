@@ -7,7 +7,6 @@ module.exports = {
     etherlink: {
       url: "https://node.ghostnet.etherlink.com",
       accounts: [process.env.PRIVATE_KEY],
-      chainId: 128123, // ✅ explicitly required
     },
   },
 };

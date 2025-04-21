@@ -10,7 +10,7 @@ declare global {
   }
 }
 
-const CONTRACT_ADDRESS = "0xa95a773c85eeb999e4ea2839434a7c7e232fd21c";
+const CONTRACT_ADDRESS = "0x504164c23dee28265e4871555cfd0cf1dbb724b5";
 const CONTRACT_ABI = [
   "function mint(address to, string memory tokenURI) public",
   "function transferNFT(address to, uint256 tokenId) public",
